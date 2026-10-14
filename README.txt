@@ -14,14 +14,24 @@ Open index.html in een browser. Voor de beste lokale test kun je in deze map een
 Daarna: http://localhost:8000
 
 RSVP OPSLAG + E-MAILMELDINGEN
-De formulieren zijn voorbereid op Netlify Forms. Zodra de site op Netlify staat:
-1. Deploy de map als site op Netlify.
-2. Netlify herkent het formulier met de naam "rsvp" automatisch.
-3. In Netlify: Site configuration > Forms > Form notifications.
-4. Voeg een e-mailnotificatie toe naar: rvanzijverden@hotmail.com
-5. Inzendingen blijven daarnaast in het Netlify Forms-overzicht bewaard en kunnen als CSV worden geëxporteerd.
+De RSVP is gekoppeld aan Web3Forms en werkt ook op GitHub Pages.
 
-Belangrijk: vóór publicatie graag één test-RSVP uitvoeren. Netlify/e-mailmeldingen werken pas na deployment; lokaal wordt niets verstuurd.
+Instelling:
+- Web3Forms endpoint: https://api.web3forms.com/submit
+- De access key staat als publieke client-side key in index.html.
+- Web3Forms verstuurt inzendingen naar het e-mailadres dat aan die key is gekoppeld.
+- Na een succesvolle inzending wordt de gast doorgestuurd naar bedankt.html.
+- De redirect wordt via JavaScript dynamisch opgebouwd, zodat dit ook werkt wanneer de site in een GitHub Pages repository-submap staat.
+- Honeypot/botcheck is toegevoegd.
+
+BELANGRIJK VOOR PUBLICATIE
+1. Upload de volledige inhoud van deze map naar GitHub.
+2. Activeer GitHub Pages voor de juiste branch/map.
+3. Open de gepubliceerde URL en doe één echte test-RSVP.
+4. Controleer of de e-mail binnenkomt en of de bedankpagina verschijnt.
+5. Controleer ook het Web3Forms-dashboard voor de testinzending.
+
+De Web3Forms access key is volgens Web3Forms bedoeld als publieke client-side sleutel; hij hoeft dus niet als wachtwoord verborgen te worden.
 
 RSVP-LOGICA
 - Maximaal 4 gasten per huishouden/stel.

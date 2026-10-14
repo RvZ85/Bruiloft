@@ -198,9 +198,11 @@
         <p>Graag vóór <strong>15 januari 2027</strong>. We kijken ernaar uit om deze dag samen met jullie te vieren.</p>
       </div>
 
-      <form class="rsvp-form section-shell reveal" name="rsvp" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/bedankt.html">
-        <input type="hidden" name="form-name" value="rsvp" />
-        <p class="visually-hidden"><label>Niet invullen: <input name="bot-field" /></label></p>
+      <form class="rsvp-form section-shell reveal" name="rsvp" method="POST" action="https://api.web3forms.com/submit">
+        <input type="hidden" name="access_key" value="18245906-1c86-4ad6-a6b8-f914b68dbbe2" />
+        <input type="hidden" name="subject" value="Nieuwe RSVP — Robbert & Mellanie" />
+        <input type="hidden" id="web3forms-redirect" name="redirect" value="" />
+        <input type="checkbox" name="botcheck" class="visually-hidden" tabindex="-1" autocomplete="off" />
 
         <div class="form-section">
           <div class="form-section-title"><span>01</span><div><h3>Jullie</h3><p>Begin met het huishouden of stel waarvoor je invult.</p></div></div>

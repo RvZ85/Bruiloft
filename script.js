@@ -62,6 +62,11 @@ form.addEventListener('submit',e=>{
     activityError.hidden=chosen;
     if(!chosen){e.preventDefault();document.getElementById('activities').scrollIntoView({behavior:'smooth',block:'center'});return}
   }
+
+  // Web3Forms requires an absolute redirect URL. Build it at submit time so
+  // this works on GitHub Pages regardless of the repository/subfolder name.
+  const redirect=document.getElementById('web3forms-redirect');
+  if(redirect) redirect.value=new URL('bedankt.html',window.location.href).href;
 });
 
 syncAttendance();
