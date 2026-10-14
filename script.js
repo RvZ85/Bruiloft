@@ -27,6 +27,8 @@ const attendingFields=document.getElementById('attending-fields');
 const wholeDay=document.getElementById('whole-day');
 const partChecks=[...document.querySelectorAll('.part-check')];
 const activityError=document.getElementById('activity-error');
+const formStatus=document.getElementById('form-status');
+const submitButton=form.querySelector('.submit-button');
 
 function isAttending(){return document.querySelector('input[name="aanwezigheid"]:checked')?.value==='Ja'}
 function dinnerSelected(){return wholeDay.checked || partChecks.some(c=>c.value==='Diner'&&c.checked)}
@@ -56,17 +58,58 @@ wholeDay.addEventListener('change',()=>{
 });
 partChecks.forEach(c=>c.addEventListener('change',()=>{if(!c.checked)wholeDay.checked=false;syncGuestRows()}));
 
-form.addEventListener('submit',e=>{
+function formDataToObject(formData){
+  const data={};
+  for(const [key,value] of formData.entries()){
+    if(key==='botcheck' && value==='') continue;
+    if(Object.prototype.hasOwnProperty.call(data,key)){
+      data[key]=`${data[key]}, ${value}`;
+    }else{
+      data[key]=value;
+    }
+  }
+  return data;
+}
+
+form.addEventListener('submit',async e=>{
+  e.preventDefault();
+  formStatus.textContent='';
+
   if(isAttending()){
     const chosen=wholeDay.checked||partChecks.some(c=>c.checked);
     activityError.hidden=chosen;
-    if(!chosen){e.preventDefault();document.getElementById('activities').scrollIntoView({behavior:'smooth',block:'center'});return}
+    if(!chosen){
+      document.getElementById('activities').scrollIntoView({behavior:'smooth',block:'center'});
+      return;
+    }
   }
 
-  // Web3Forms requires an absolute redirect URL. Build it at submit time so
-  // this works on GitHub Pages regardless of the repository/subfolder name.
-  const redirect=document.getElementById('web3forms-redirect');
-  if(redirect) redirect.value=new URL('bedankt.html',window.location.href).href;
+  submitButton.disabled=true;
+  const originalText=submitButton.textContent;
+  submitButton.textContent='Even versturen…';
+  formStatus.textContent='Je RSVP wordt verstuurd.';
+
+  try{
+    const payload=formDataToObject(new FormData(form));
+    const response=await fetch('https://api.web3forms.com/submit',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify(payload)
+    });
+    const result=await response.json();
+    if(!response.ok || !result.success){
+      throw new Error(result.message || 'Versturen is niet gelukt.');
+    }
+
+    // Redirect locally after Web3Forms confirms success. This avoids the
+    // generic Web3Forms thank-you page and also works in a GitHub Pages subfolder.
+    window.location.href=new URL('bedankt.html',window.location.href).href;
+  }catch(error){
+    console.error(error);
+    formStatus.textContent='Het versturen is niet gelukt. Probeer het nog een keer of neem contact met ons op.';
+    submitButton.disabled=false;
+    submitButton.textContent=originalText;
+  }
 });
 
 syncAttendance();
